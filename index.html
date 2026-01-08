@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    #status {
+      margin: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .loading {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>QR Code Scanner</h1>
+  <p>Point camera at QR code containing unique ID, then tap to scan.</p>
+
+  <div id="reader"></div>
+
+  <div id="status">Click "Start Scanner" to begin.</div>
+
+  <br>
+  <button onclick="startScanner()">Start Scanner</button>
+  <button onclick="stopScanner()" id="stopBtn" disabled>Stop Scanner</button>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbydIz16KS-jQkVr5ECdOE0va3yxXmjZ0ZZeum6cSAjYphiyXNYcyGITEFQFpLtgjYpLxw/exec';  // e.g. 'https://script.google.com/macros/s/ABC/exec'
+    const statusEl = document.getElementById('status');
+    let html5QrCode;
+
+    function setStatus(message, type = '') {
+      statusEl.textContent = message;
+      statusEl.className = type;
+    }
+
+    function startScanner() {
+      html5QrCode = new Html5Qrcode('reader');
+
+      const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0
+      };
+
+      html5QrCode.start(
+        { facingMode: 'environment' },  // Rear camera preferred
+        config,
+        onScanSuccess,
+        onScanError
+      ).then(() => {
+        setStatus('Scanner active. Point at QR code.', 'loading');
+        document.getElementById('stopBtn').disabled = false;
+      }).catch(err => {
+        setStatus('Camera error: ' + err, 'error');
+      });
+    }
+
+    function stopScanner() {
+      if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+          setStatus('Scanner stopped.', '');
+          document.getElementById('stopBtn').disabled = true;
+        }).catch(err => {
+          setStatus('Stop error: ' + err, 'error');
+        });
+      }
+    }
+
+    async function onScanSuccess(decodedText, decodedResult) {
+      setStatus(`Scanned: ${decodedText} - Calling API...`, 'loading');
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          redirect: "follow",
+          body: JSON.stringify({ uid: decodedText }),
+          headers: { "Content-Type": "text/plain", }
+          //   headers: { 'Content-Type': 'application/json' },
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setStatus(`✅ SUCCESS: ${decodedText} marked as scanned (row ${result.row})`, 'success');
+        } else {
+          setStatus(`❌ API Error: ${result.error}`, 'error');
+        }
+      } catch (err) {
+        setStatus(`❌ Network error: ${err.message}`, 'error');
+      }
+
+      // Auto restart scanner after 3 seconds
+      setTimeout(startScanner, 3000);
+    }
+
+    function onScanError() {
+      // Silent ignore
+    }
+  </script>
+</body>
+
+</html>
