@@ -13,7 +13,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          BASE_PATH: '/{repo-name}'  # Replace with your repo name
+          BASE_PATH: '/2026ustccap'  # Replace with your repo name
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/
