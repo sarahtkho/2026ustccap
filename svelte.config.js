@@ -11,6 +11,9 @@ const config = {
       fallback: null,
       precompress: false
     }),
+    paths: {
+      base: '/concert-qr-checkin'  // ← ADD YOUR REPO NAME
+    },
     prerender: {
       default: true
     }
