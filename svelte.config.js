@@ -12,7 +12,7 @@ const config = {
       precompress: false
     }),
     paths: {
-      base: '/concert-qr-checkin'  // ← ADD YOUR REPO NAME
+      base: '/2026ustccap'  // ← ADD YOUR REPO NAME
     },
     prerender: {
       default: true
