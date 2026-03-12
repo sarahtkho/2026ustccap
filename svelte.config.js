@@ -12,7 +12,7 @@ const config = {
       precompress: false
     }),
     paths: {
-      base: '/2026ustccap'  // ← ADD YOUR REPO NAME
+      base: '/sarahtkho/2026ustccap'  // ← ADD YOUR REPO NAME
     },
     prerender: {
       default: true
