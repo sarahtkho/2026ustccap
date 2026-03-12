@@ -1,0 +1,37 @@
+{
+  "name": "concert-qr-checkin",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-sanity",
+    "check:watch": "svelte-sanity --watch true",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.1",
+    "@sveltejs/kit": "^2.5.4",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@types/node": "^20.12.12",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-svelte": "^2.35.1",
+    "prettier": "^3.1.1",
+    "prettier-plugin-svelte": "^3.1.2",
+    "svelte": "^4.2.12",
+    "svelte-check": "^3.6.3",
+    "typescript": "~5.3.3",
+    "vite": "^5.2.8"
+  },
+  "dependencies": {
+    "html5-qrcode": "^2.3.8"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/concert-qr-checkin.git"
+  }
+}
